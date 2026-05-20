@@ -1,0 +1,120 @@
+================================================================================
+                    GitHub & Vercel Deployment Guide
+================================================================================
+
+PROJECT: My Work To Do - Task Management Application
+GITHUB REPO: biwunchi/my-work-todo
+SUPABASE URL: https://txcwaldcmmrxmhpmuurq.supabase.co/
+
+================================================================================
+STEP 1: Create GitHub Repository
+================================================================================
+
+Method 1 (If you have GitHub CLI installed):
+  
+  gh auth login
+  gh repo create my-work-todo --public --source=. --remote=origin --push
+
+Method 2 (Manual via GitHub Web):
+  
+  1. Go to https://github.com/new
+  2. Repository name: my-work-todo
+  3. Description: A modern task management app with Calendar, Weekly, and Daily views
+  4. Choose: Public
+  5. Click "Create repository"
+  6. Run these commands in the project directory:
+  
+     git remote add origin https://github.com/biwunchi/my-work-todo.git
+     git branch -M main
+     git push -u origin main
+
+================================================================================
+STEP 2: Deploy to Vercel
+================================================================================
+
+Option 1 (Automatic - Recommended):
+  
+  1. Go to https://vercel.com
+  2. Sign in with GitHub account
+  3. Click "New Project"
+  4. Select repository "my-work-todo"
+  5. Framework: Next.js (auto-detected)
+  6. Environment Variables:
+     
+     NEXT_PUBLIC_SUPABASE_URL=https://txcwaldcmmrxmhpmuurq.supabase.co/
+     NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR4Y3dhbGRjbW1yeG1ocG11dXJxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkyNTcxODgsImV4cCI6MjA5NDgzMzE4OH0.czJ2icMSrhadLxBgYoabCWpy_KPuObMR3qWm5h-rmG4
+  
+  7. Click "Deploy"
+  8. Wait for deployment to complete
+
+Option 2 (Using Vercel CLI):
+  
+  npm i -g vercel
+  vercel
+  (Follow the prompts)
+
+================================================================================
+STEP 3: Verify Deployment
+================================================================================
+
+After deployment, you'll get a live URL like:
+  https://my-work-todo.vercel.app
+
+Test the application:
+  1. Visit the live URL
+  2. Try creating a task
+  3. Test all three views (Calendar, Weekly, Daily)
+  4. Toggle dark/light mode
+  5. Verify tasks sync with Supabase
+
+================================================================================
+ENVIRONMENT VARIABLES REFERENCE
+================================================================================
+
+For Vercel deployment, add these environment variables:
+
+NEXT_PUBLIC_SUPABASE_URL (Public)
+  Purpose: Supabase project URL
+  Value: https://txcwaldcmmrxmhpmuurq.supabase.co/
+
+NEXT_PUBLIC_SUPABASE_ANON_KEY (Public)
+  Purpose: Supabase anonymous API key
+  Value: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR4Y3dhbGRjbW1yeG1ocG11dXJxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkyNTcxODgsImV4cCI6MjA5NDgzMzE4OH0.czJ2icMSrhadLxBgYoabCWpy_KPuObMR3qWm5h-rmG4
+
+Note: These keys are safe to expose as they are public API keys with limited permissions.
+
+================================================================================
+TROUBLESHOOTING
+================================================================================
+
+Issue: "Build failed" on Vercel
+  - Ensure .env.local is in .gitignore (it is)
+  - Check environment variables are set in Vercel dashboard
+  - Run 'npm run build' locally to test
+
+Issue: Tasks not syncing
+  - Verify Supabase credentials are correct
+  - Check Supabase dashboard for 'tasks' table
+  - Ensure table has required columns: id, title, description, date, priority, completed, created_at, updated_at
+
+Issue: Dark mode not working
+  - Clear browser cache
+  - Check localStorage for 'theme' key
+  - Verify tailwind.config.ts has darkMode: 'class'
+
+Issue: Cannot connect to Supabase
+  - Verify URL and key are correct in .env.local
+  - Check Supabase project is active
+  - Ensure RLS (Row Level Security) allows public read/write for tasks table
+
+================================================================================
+NEXT STEPS
+================================================================================
+
+1. Create the GitHub repository using one of the methods above
+2. Deploy to Vercel
+3. Test the live application
+4. (Optional) Set up a custom domain in Vercel settings
+5. (Optional) Configure GitHub Actions for automated tests
+
+================================================================================
