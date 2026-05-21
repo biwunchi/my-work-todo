@@ -40,7 +40,7 @@ export function TaskForm({ onAdd, onUpdate, initialTask, defaultDate, onClose }:
   }
 
   return (
-    <form onSubmit={handleSubmit} className="w-full p-4 space-y-4">
+    <form onSubmit={handleSubmit} className="w-full p-4 space-y-4" style={{ color: '#f8fafc' }}>
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-lg font-semibold">
           {initialTask ? 'Edit Task' : 'Add Task'}
@@ -49,7 +49,10 @@ export function TaskForm({ onAdd, onUpdate, initialTask, defaultDate, onClose }:
           <button
             type="button"
             onClick={onClose}
-            className="p-1 hover:bg-mm-surface-light rounded"
+            className="p-1 rounded transition"
+            style={{ backgroundColor: 'transparent', color: '#f8fafc' }}
+            onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#334155')}
+            onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'transparent')}
           >
             <X className="w-5 h-5" />
           </button>
@@ -63,7 +66,14 @@ export function TaskForm({ onAdd, onUpdate, initialTask, defaultDate, onClose }:
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           placeholder="Enter task title..."
-          className="w-full px-3 py-2 border rounded-lg bg-mm-dark border-mm-border text-mm-text placeholder-mm-text-secondary focus:outline-none focus:ring-2 focus:ring-mm-emerald"
+          style={{
+            backgroundColor: '#0f172a',
+            borderColor: '#334155',
+            color: '#f8fafc',
+          }}
+          className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2"
+          onFocus={(e) => (e.currentTarget.style.borderColor = '#00b894')}
+          onBlur={(e) => (e.currentTarget.style.borderColor = '#334155')}
         />
       </div>
 
@@ -73,7 +83,14 @@ export function TaskForm({ onAdd, onUpdate, initialTask, defaultDate, onClose }:
           value={description}
           onChange={(e) => setDescription(e.target.value)}
           placeholder="Add notes or details..."
-          className="w-full px-3 py-2 border rounded-lg bg-mm-dark border-mm-border text-mm-text placeholder-mm-text-secondary resize-none h-24 focus:outline-none focus:ring-2 focus:ring-mm-emerald"
+          style={{
+            backgroundColor: '#0f172a',
+            borderColor: '#334155',
+            color: '#f8fafc',
+          }}
+          className="w-full px-3 py-2 border rounded-lg resize-none h-24 focus:outline-none focus:ring-2"
+          onFocus={(e) => (e.currentTarget.style.borderColor = '#00b894')}
+          onBlur={(e) => (e.currentTarget.style.borderColor = '#334155')}
         />
       </div>
 
@@ -84,7 +101,14 @@ export function TaskForm({ onAdd, onUpdate, initialTask, defaultDate, onClose }:
             type="date"
             value={date}
             onChange={(e) => setDate(e.target.value)}
-            className="w-full px-3 py-2 border rounded-lg bg-mm-dark border-mm-border text-mm-text focus:outline-none focus:ring-2 focus:ring-mm-emerald"
+            style={{
+              backgroundColor: '#0f172a',
+              borderColor: '#334155',
+              color: '#f8fafc',
+            }}
+            className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2"
+            onFocus={(e) => (e.currentTarget.style.borderColor = '#00b894')}
+            onBlur={(e) => (e.currentTarget.style.borderColor = '#334155')}
           />
         </div>
 
@@ -93,7 +117,14 @@ export function TaskForm({ onAdd, onUpdate, initialTask, defaultDate, onClose }:
           <select
             value={priority}
             onChange={(e) => setPriority(e.target.value as 'low' | 'medium' | 'high')}
-            className="w-full px-3 py-2 border rounded-lg bg-mm-dark border-mm-border text-mm-text focus:outline-none focus:ring-2 focus:ring-mm-emerald"
+            style={{
+              backgroundColor: '#0f172a',
+              borderColor: '#334155',
+              color: '#f8fafc',
+            }}
+            className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2"
+            onFocus={(e) => (e.currentTarget.style.borderColor = '#00b894')}
+            onBlur={(e) => (e.currentTarget.style.borderColor = '#334155')}
           >
             <option value="low">Low</option>
             <option value="medium">Medium</option>
@@ -105,9 +136,24 @@ export function TaskForm({ onAdd, onUpdate, initialTask, defaultDate, onClose }:
       <button
         type="submit"
         disabled={!title.trim()}
-        className="w-full py-2 px-4 bg-mm-emerald text-mm-dark rounded-lg hover:bg-mm-emerald-light disabled:bg-mm-surface disabled:text-mm-text-secondary transition font-medium flex items-center justify-center gap-2"
+        style={{
+          backgroundColor: title.trim() ? '#00b894' : '#334155',
+          color: '#000',
+          opacity: title.trim() ? 1 : 0.5,
+        }}
+        className="w-full py-2 rounded-lg font-medium transition flex items-center justify-center gap-2"
+        onMouseEnter={(e) => {
+          if (title.trim()) {
+            e.currentTarget.style.backgroundColor = '#1dd1a1'
+          }
+        }}
+        onMouseLeave={(e) => {
+          if (title.trim()) {
+            e.currentTarget.style.backgroundColor = '#00b894'
+          }
+        }}
       >
-        <Plus className="w-4 h-4" />
+        <Plus className="w-5 h-5" />
         {initialTask ? 'Update Task' : 'Add Task'}
       </button>
     </form>

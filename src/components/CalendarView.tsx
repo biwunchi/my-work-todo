@@ -32,89 +32,101 @@ export function CalendarView({
 
   const isCurrentMonth = (date: Date) => isSameMonth(date, currentDate)
 
+  const getPriorityColor = (priority: string) => {
+    if (priority === 'high') return '#ff7675' // Red
+    if (priority === 'medium') return '#fdcb6e' // Orange
+    return '#00b894' // Green
+  }
+
   return (
-    <div className="flex-1 flex flex-col">
+    <div className="flex-1 flex flex-col" style={{ color: '#f8fafc' }}>
       <div className="flex items-center justify-between mb-6">
         <h2 className="text-2xl font-bold">{format(currentDate, 'MMMM yyyy')}</h2>
         <div className="flex gap-2">
           <button
             onClick={onPrevMonth}
-            className="p-2 hover:bg-mm-surface rounded-lg transition"
+            className="p-2 rounded-lg transition"
+            style={{ backgroundColor: '#1e293b', color: '#f8fafc' }}
+            onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#334155')}
+            onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#1e293b')}
           >
             <ChevronLeft className="w-5 h-5" />
           </button>
           <button
             onClick={onNextMonth}
-            className="p-2 hover:bg-mm-surface rounded-lg transition"
+            className="p-2 rounded-lg transition"
+            style={{ backgroundColor: '#1e293b', color: '#f8fafc' }}
+            onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#334155')}
+            onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#1e293b')}
           >
             <ChevronRight className="w-5 h-5" />
           </button>
         </div>
       </div>
 
-      <div className="grid grid-cols-7 gap-2 mb-2">
-        {weekDays.map((day) => (
-          <div
-            key={day}
-            className="text-center font-semibold text-sm py-2 text-mm-text-secondary"
-          >
-            {day}
-          </div>
-        ))}
-      </div>
-
-      <div className="grid grid-cols-7 gap-2 flex-1">
-        {days.map((day) => {
-          const dateStr = formatDateForSupabase(day)
-          const dayTasks = getTasksForDate(day)
-          const isOtherMonth = !isCurrentMonth(day)
-
-          return (
+      {/* Calendar Grid */}
+      <div className="flex-1 flex flex-col border rounded-lg overflow-hidden" style={{ borderColor: '#334155', backgroundColor: '#0f172a' }}>
+        {/* Weekday Headers */}
+        <div className="grid grid-cols-7 gap-0 border-b" style={{ borderColor: '#334155' }}>
+          {weekDays.map((day) => (
             <div
-              key={dateStr}
-              onClick={() => onDateSelect(day)}
-              onMouseEnter={() => setHoveredDate(dateStr)}
-              onMouseLeave={() => setHoveredDate(null)}
-              className={`
-                min-h-24 p-2 border rounded-lg cursor-pointer transition
-                ${isOtherMonth ? 'bg-mm-dark text-mm-text-secondary border-mm-border' : 'bg-mm-surface border-mm-border hover:bg-mm-surface-light'}
-                ${hoveredDate === dateStr ? 'ring-2 ring-mm-emerald' : ''}
-              `}
+              key={day}
+              className="p-3 text-center font-semibold text-sm border-r"
+              style={{ borderColor: '#334155', backgroundColor: '#1e293b', color: '#f8fafc' }}
             >
-              <div className="text-sm font-semibold mb-2">{format(day, 'd')}</div>
-              <div className="space-y-1">
-                {hoveredDate === dateStr && dayTasks.length > 0 && (
-                  <div className="text-xs space-y-1 max-h-12 overflow-y-auto">
-                    {dayTasks.slice(0, 3).map((task) => (
-                      <div
-                        key={task.id}
-                        className={`px-2 py-1 rounded text-white text-xs font-medium truncate ${
-                          task.priority === 'high'
-                            ? 'bg-red-500'
-                            : task.priority === 'medium'
-                            ? 'bg-yellow-500'
-                            : 'bg-mm-emerald'
-                        }`}
-                      >
-                        {task.title}
-                      </div>
-                    ))}
-                    {dayTasks.length > 3 && (
-                      <div className="text-xs text-mm-text-secondary px-2">
-                        +{dayTasks.length - 3} more
-                      </div>
-                    )}
-                  </div>
-                )}
-                {hoveredDate !== dateStr && dayTasks.length > 0 && (
-                  <div className="text-xs font-semibold text-mm-emerald">
-                    {dayTasks.length} task{dayTasks.length > 1 ? 's' : ''}
-                  </div>
-                )}
-              </div>
+              {day}
             </div>
-          )
-        })}
+          ))}
+        </div>
+
+        {/* Calendar Dates */}
+        <div className="flex-1 grid grid-cols-7 gap-0" style={{ backgroundColor: '#0f172a' }}>
+          {days.map((date, index) => {
+            const tasksForDate = getTasksForDate(date)
+            const isCurrentDateMonth = isCurrentMonth(date)
+            const isToday = formatDateForSupabase(date) === formatDateForSupabase(new Date())
+
+            return (
+              <div
+                key={index}
+                className="p-3 border cursor-pointer transition"
+                style={{
+                  borderColor: '#334155',
+                  backgroundColor: isToday ? '#1dd1a1' : isCurrentDateMonth ? '#1e293b' : '#0f172a',
+                  color: isToday ? '#000' : '#f8fafc',
+                  opacity: isCurrentDateMonth ? 1 : 0.5,
+                }}
+                onMouseEnter={() => setHoveredDate(formatDateForSupabase(date))}
+                onMouseLeave={() => setHoveredDate(null)}
+                onClick={() => onDateSelect(date)}
+              >
+                <div className="text-sm font-semibold mb-2">{date.getDate()}</div>
+                
+                {/* Task Indicators */}
+                <div className="flex flex-col gap-1">
+                  {tasksForDate.slice(0, 2).map((task) => (
+                    <div
+                      key={task.id}
+                      className="text-xs px-2 py-1 rounded truncate"
+                      style={{
+                        backgroundColor: getPriorityColor(task.priority),
+                        color: '#000',
+                        fontSize: '10px',
+                      }}
+                    >
+                      {task.title.substring(0, 15)}
+                    </div>
+                  ))}
+                  {tasksForDate.length > 2 && (
+                    <div className="text-xs text-mm-emerald">
+                      +{tasksForDate.length - 2} more
+                    </div>
+                  )}
+                </div>
+              </div>
+            )
+          })}
+        </div>
       </div>
     </div>
   )

@@ -1,6 +1,6 @@
 'use client'
 
-import { Calendar, CalendarDays, Calendar as CalendarIcon } from 'lucide-react'
+import { Calendar, Calendar as WeekIcon, Calendar as DayIcon } from 'lucide-react'
 
 type ViewSelectorProps = {
   currentView: 'calendar' | 'weekly' | 'daily'
@@ -9,10 +9,10 @@ type ViewSelectorProps = {
 
 export function ViewSelector({ currentView, onViewChange }: ViewSelectorProps) {
   const views = [
-    { id: 'calendar', label: 'Calendar', icon: Calendar },
-    { id: 'weekly', label: 'Weekly', icon: CalendarDays },
-    { id: 'daily', label: 'Daily', icon: CalendarIcon },
-  ] as const
+    { id: 'calendar' as const, label: 'Calendar', icon: Calendar },
+    { id: 'weekly' as const, label: 'Weekly', icon: WeekIcon },
+    { id: 'daily' as const, label: 'Daily', icon: DayIcon },
+  ]
 
   return (
     <div className="flex gap-2 mb-6">
@@ -20,11 +20,30 @@ export function ViewSelector({ currentView, onViewChange }: ViewSelectorProps) {
         <button
           key={id}
           onClick={() => onViewChange(id)}
-          className={`flex items-center gap-2 px-4 py-2 rounded-lg transition font-medium ${
-            currentView === id
-              ? 'bg-mm-emerald text-mm-dark hover:bg-mm-emerald-light'
-              : 'bg-mm-surface text-mm-text hover:bg-mm-surface-light'
-          }`}
+          style={{
+            backgroundColor: currentView === id ? '#00b894' : '#1e293b',
+            color: currentView === id ? '#000' : '#f8fafc',
+            border: 'none',
+            borderRadius: '6px',
+            padding: '8px 16px',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px',
+            cursor: 'pointer',
+            fontWeight: 'medium',
+            fontSize: '14px',
+            transition: 'all 0.2s',
+          }}
+          onMouseEnter={(e) => {
+            if (currentView !== id) {
+              e.currentTarget.style.backgroundColor = '#334155'
+            }
+          }}
+          onMouseLeave={(e) => {
+            if (currentView !== id) {
+              e.currentTarget.style.backgroundColor = '#1e293b'
+            }
+          }}
         >
           <Icon className="w-4 h-4" />
           {label}

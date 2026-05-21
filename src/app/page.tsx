@@ -54,7 +54,7 @@ export default function Home() {
   if (!mounted) return null
 
   return (
-    <main className="w-screen h-screen bg-mm-dark text-mm-text transition-colors flex">
+    <main className="w-screen h-screen transition-colors flex" style={{ backgroundColor: '#0f172a', color: '#f8fafc' }}>
       {/* Main Content */}
       <div className="flex-1 flex flex-col p-8 overflow-hidden">
         {/* Header */}
