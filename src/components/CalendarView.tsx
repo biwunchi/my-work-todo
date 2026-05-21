@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { format, isSameMonth } from 'date-fns'
 import { ko } from 'date-fns/locale'
-import { ChevronLeft, ChevronRight } from 'lucide-react'
+import { ChevronLeft, ChevronRight, Calendar } from 'lucide-react'
 import { getDaysInMonth, formatDateForSupabase } from '@/lib/dateUtils'
 import { Task } from '@/lib/supabase'
 
@@ -34,9 +34,9 @@ export function CalendarView({
   const isCurrentMonth = (date: Date) => isSameMonth(date, currentDate)
 
   const getPriorityColor = (priority: string) => {
-    if (priority === 'high') return { bg: '#ff7675', text: '#fff' }
-    if (priority === 'medium') return { bg: '#fdcb6e', text: '#000' }
-    return { bg: '#1dd1a1', text: '#000' }
+    if (priority === 'high') return { bg: 'bg-red-500/20', border: 'border-red-500/50', text: 'text-red-400', label: '높음' }
+    if (priority === 'medium') return { bg: 'bg-amber-500/20', border: 'border-amber-500/50', text: 'text-amber-400', label: '중간' }
+    return { bg: 'bg-mm-emerald/20', border: 'border-mm-emerald/50', text: 'text-mm-emerald', label: '낮음' }
   }
 
   const isToday = (date: Date) => {
@@ -47,62 +47,41 @@ export function CalendarView({
   }
 
   return (
-    <div className="flex-1 flex flex-col h-full" style={{ color: '#f8fafc' }}>
+    <div className="flex-1 flex flex-col h-full text-mm-text animate-slideInUp">
       {/* Header */}
       <div className="flex items-center justify-between mb-8">
-        <h2 className="text-3xl font-bold" style={{ fontSize: '32px', fontWeight: 'bold' }}>
-          {format(currentDate, 'MMMM yyyy', { locale: ko })}
-        </h2>
+        <div className="flex items-center gap-3">
+          <Calendar className="w-8 h-8 text-mm-emerald" />
+          <h2 className="text-3xl font-bold">
+            {format(currentDate, 'MMMM yyyy', { locale: ko })}
+          </h2>
+        </div>
         <div className="flex gap-3">
           <button
             onClick={onPrevMonth}
-            className="p-3 rounded-lg transition hover:shadow-lg"
-            style={{ backgroundColor: '#1e293b', color: '#f8fafc' }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.backgroundColor = '#334155'
-              e.currentTarget.style.transform = 'scale(1.05)'
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.backgroundColor = '#1e293b'
-              e.currentTarget.style.transform = 'scale(1)'
-            }}
+            className="p-3 rounded-xl transition-all duration-300 bg-mm-surface-light hover:bg-mm-surface-lighter hover:shadow-lg hover:scale-105"
+            title="이전 달"
           >
-            <ChevronLeft className="w-6 h-6" />
+            <ChevronLeft className="w-6 h-6 text-mm-emerald" />
           </button>
           <button
             onClick={onNextMonth}
-            className="p-3 rounded-lg transition hover:shadow-lg"
-            style={{ backgroundColor: '#1e293b', color: '#f8fafc' }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.backgroundColor = '#334155'
-              e.currentTarget.style.transform = 'scale(1.05)'
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.backgroundColor = '#1e293b'
-              e.currentTarget.style.transform = 'scale(1)'
-            }}
+            className="p-3 rounded-xl transition-all duration-300 bg-mm-surface-light hover:bg-mm-surface-lighter hover:shadow-lg hover:scale-105"
+            title="다음 달"
           >
-            <ChevronRight className="w-6 h-6" />
+            <ChevronRight className="w-6 h-6 text-mm-emerald" />
           </button>
         </div>
       </div>
 
       {/* Calendar Grid */}
-      <div 
-        className="flex-1 flex flex-col border rounded-2xl overflow-hidden shadow-2xl"
-        style={{ 
-          borderColor: '#334155', 
-          backgroundColor: '#0f172a',
-          display: 'flex'
-        }}
-      >
+      <div className="flex-1 flex flex-col rounded-3xl overflow-hidden border border-mm-border-light bg-gradient-to-br from-mm-surface to-mm-surface-alt shadow-premium">
         {/* Weekday Headers */}
-        <div className="grid grid-cols-7 gap-0 border-b" style={{ borderColor: '#334155', backgroundColor: '#1e293b' }}>
+        <div className="grid grid-cols-7 gap-0 bg-mm-surface-light border-b border-mm-border-light">
           {weekDays.map((day) => (
             <div
               key={day}
-              className="p-4 text-center font-bold text-lg"
-              style={{ backgroundColor: '#1e293b', color: '#1dd1a1', borderRight: '1px solid #334155' }}
+              className="p-4 text-center font-bold text-lg text-mm-emerald bg-mm-surface/50 hover:bg-mm-surface-alt transition-colors"
             >
               {day}
             </div>
@@ -110,85 +89,68 @@ export function CalendarView({
         </div>
 
         {/* Calendar Dates - Grid Layout */}
-        <div className="flex-1 grid grid-cols-7 gap-px" style={{ backgroundColor: '#0f172a', padding: '8px' }}>
+        <div className="flex-1 grid grid-cols-7 gap-px p-2 bg-mm-surface-light overflow-hidden">
           {days.map((date, index) => {
             const tasksForDate = getTasksForDate(date)
             const isCurrentDateMonth = isCurrentMonth(date)
             const isTodayDate = isToday(date)
             const dateStr = formatDateForSupabase(date)
+            const isHovered = hoveredDate === dateStr
 
             return (
               <div
                 key={index}
-                className="rounded-xl p-4 cursor-pointer transition border-2"
+                className={`rounded-2xl p-3 cursor-pointer transition-all duration-300 border-2 flex flex-col ${
+                  isTodayDate
+                    ? 'border-mm-emerald bg-gradient-to-br from-mm-emerald/10 to-mm-emerald/5 shadow-glow'
+                    : isCurrentDateMonth
+                    ? 'border-mm-border-light bg-mm-surface hover:border-mm-emerald/50'
+                    : 'border-mm-border opacity-30 bg-mm-surface-alt'
+                } ${
+                  isHovered && isCurrentDateMonth ? 'shadow-glow-md transform scale-105' : ''
+                } ${!isCurrentDateMonth ? 'opacity-40 cursor-default' : ''}`}
                 style={{
-                  backgroundColor: isTodayDate ? 'rgba(29, 209, 161, 0.15)' : isCurrentDateMonth ? '#1e293b' : '#0f172a',
-                  borderColor: isTodayDate ? '#1dd1a1' : '#334155',
-                  opacity: isCurrentDateMonth ? 1 : 0.4,
                   minHeight: '160px',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  boxShadow: isTodayDate ? '0 0 20px rgba(29, 209, 161, 0.3)' : 'none',
+                  backdropFilter: 'blur(10px)',
                 }}
-                onMouseEnter={() => {
-                  setHoveredDate(dateStr)
-                  if (isCurrentDateMonth) {
-                    (event?.currentTarget as HTMLElement).style.boxShadow = '0 8px 24px rgba(0, 184, 148, 0.2)'
-                    ;(event?.currentTarget as HTMLElement).style.transform = 'translateY(-2px)'
-                  }
-                }}
-                onMouseLeave={() => {
-                  setHoveredDate(null)
-                  if (isTodayDate) {
-                    (event?.currentTarget as HTMLElement).style.boxShadow = '0 0 20px rgba(29, 209, 161, 0.3)'
-                  } else {
-                    (event?.currentTarget as HTMLElement).style.boxShadow = 'none'
-                  }
-                  ;(event?.currentTarget as HTMLElement).style.transform = 'translateY(0)'
-                }}
+                onMouseEnter={() => isCurrentDateMonth && setHoveredDate(dateStr)}
+                onMouseLeave={() => setHoveredDate(null)}
                 onClick={() => isCurrentDateMonth && onDateSelect(date)}
               >
                 {/* Date Number */}
-                <div 
-                  className="text-xl font-bold mb-3"
-                  style={{
-                    color: isTodayDate ? '#1dd1a1' : '#f8fafc',
-                    fontSize: '20px'
-                  }}
-                >
+                <div className={`text-xl font-bold mb-2 ${isTodayDate ? 'text-mm-emerald' : 'text-mm-text'}`}>
                   {date.getDate()}
                 </div>
 
                 {/* Tasks Container */}
-                <div className="flex flex-col gap-2 flex-1 overflow-y-auto">
+                <div className="flex flex-col gap-1 flex-1 overflow-y-auto">
                   {tasksForDate.slice(0, 3).map((task) => {
                     const colors = getPriorityColor(task.priority)
                     return (
                       <div
                         key={task.id}
-                        className="text-xs px-2 py-1 rounded-md truncate font-medium transition"
-                        style={{
-                          backgroundColor: colors.bg,
-                          color: colors.text,
-                          fontSize: '11px',
-                          overflow: 'hidden',
-                          textOverflow: 'ellipsis',
-                          whiteSpace: 'nowrap'
-                        }}
+                        className={`text-xs px-2 py-1.5 rounded-lg truncate font-medium border ${colors.bg} ${colors.border} ${colors.text} transition-all duration-300 hover:shadow-md`}
                         title={task.title}
                       >
                         {task.title}
                       </div>
                     )
                   })}
-                  
+
                   {/* More indicator */}
                   {tasksForDate.length > 3 && (
-                    <div className="text-xs font-semibold" style={{ color: '#1dd1a1', fontSize: '11px' }}>
+                    <div className="text-xs font-semibold text-mm-emerald mt-1">
                       +{tasksForDate.length - 3}개 더
                     </div>
                   )}
                 </div>
+
+                {/* Task count badge */}
+                {tasksForDate.length > 0 && (
+                  <div className="mt-2 pt-2 border-t border-mm-border-light text-xs text-mm-text-tertiary">
+                    {tasksForDate.length}개 작업
+                  </div>
+                )}
               </div>
             )
           })}

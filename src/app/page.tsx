@@ -10,6 +10,7 @@ import { Sidebar } from '@/components/Sidebar'
 import { ViewSelector } from '@/components/ViewSelector'
 import { ThemeToggle } from '@/components/ThemeToggle'
 import { Task } from '@/lib/supabase'
+import { Sparkles } from 'lucide-react'
 
 type View = 'calendar' | 'weekly' | 'daily'
 
@@ -54,25 +55,37 @@ export default function Home() {
   if (!mounted) return null
 
   return (
-    <main className="w-screen h-screen transition-colors flex" style={{ backgroundColor: '#0f172a', color: '#f8fafc' }}>
+    <main className="w-screen h-screen bg-gradient-to-br from-mm-dark via-mm-dark-secondary to-mm-navy text-mm-text flex overflow-hidden">
       {/* Main Content */}
-      <div className="flex-1 flex flex-col p-10 overflow-hidden" style={{ paddingLeft: '40px', paddingRight: '20px' }}>
-        {/* Header */}
-        <div className="flex items-center justify-between mb-8">
-          <h1 className="text-4xl font-bold">My Work To Do</h1>
-          <ThemeToggle />
-        </div>
+      <div className="flex-1 flex flex-col p-8 md:p-12 overflow-hidden">
+        {/* Header Section */}
+        <div className="mb-10 animate-fadeIn">
+          <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center gap-3">
+              <div className="p-3 rounded-2xl bg-gradient-to-br from-mm-emerald to-mm-emerald-light shadow-glow-md">
+                <Sparkles className="w-6 h-6 text-black" />
+              </div>
+              <div>
+                <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-mm-text to-mm-text-secondary bg-clip-text text-transparent">
+                  My Work To Do
+                </h1>
+                <p className="text-mm-text-tertiary text-sm mt-1">업무 관리를 더 스마트하게</p>
+              </div>
+            </div>
+            <ThemeToggle />
+          </div>
 
-        {/* View Selector */}
-        <ViewSelector currentView={currentView} onViewChange={setCurrentView} />
+          {/* View Selector */}
+          <ViewSelector currentView={currentView} onViewChange={setCurrentView} />
+        </div>
 
         {/* Content Area */}
         <div className="flex-1 overflow-hidden">
           {loading ? (
             <div className="flex items-center justify-center h-full">
               <div className="text-center">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-mm-emerald mx-auto mb-4"></div>
-                <p className="text-mm-text-secondary">Loading tasks...</p>
+                <div className="animate-spin rounded-full h-16 w-16 border-4 border-mm-surface-light border-t-mm-emerald mx-auto mb-6 shadow-glow"></div>
+                <p className="text-mm-text-secondary text-lg">작업 로딩 중...</p>
               </div>
             </div>
           ) : currentView === 'calendar' ? (

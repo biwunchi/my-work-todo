@@ -1,6 +1,6 @@
 'use client'
 
-import { Calendar, Calendar as WeekIcon, Calendar as DayIcon } from 'lucide-react'
+import { Calendar, CalendarDays, CalendarClock } from 'lucide-react'
 
 type ViewSelectorProps = {
   currentView: 'calendar' | 'weekly' | 'daily'
@@ -9,46 +9,39 @@ type ViewSelectorProps = {
 
 export function ViewSelector({ currentView, onViewChange }: ViewSelectorProps) {
   const views = [
-    { id: 'calendar' as const, label: 'Calendar', icon: Calendar },
-    { id: 'weekly' as const, label: 'Weekly', icon: WeekIcon },
-    { id: 'daily' as const, label: 'Daily', icon: DayIcon },
+    { id: 'calendar' as const, label: '월간', icon: Calendar, description: '전체 월간 보기' },
+    { id: 'weekly' as const, label: '주간', icon: CalendarDays, description: '주간 일정' },
+    { id: 'daily' as const, label: '일일', icon: CalendarClock, description: '일일 상세' },
   ]
 
   return (
-    <div className="flex gap-2 mb-6">
-      {views.map(({ id, label, icon: Icon }) => (
-        <button
-          key={id}
-          onClick={() => onViewChange(id)}
-          style={{
-            backgroundColor: currentView === id ? '#00b894' : '#1e293b',
-            color: currentView === id ? '#000' : '#f8fafc',
-            border: 'none',
-            borderRadius: '6px',
-            padding: '8px 16px',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '8px',
-            cursor: 'pointer',
-            fontWeight: 'medium',
-            fontSize: '14px',
-            transition: 'all 0.2s',
-          }}
-          onMouseEnter={(e) => {
-            if (currentView !== id) {
-              e.currentTarget.style.backgroundColor = '#334155'
-            }
-          }}
-          onMouseLeave={(e) => {
-            if (currentView !== id) {
-              e.currentTarget.style.backgroundColor = '#1e293b'
-            }
-          }}
-        >
-          <Icon className="w-4 h-4" />
-          {label}
-        </button>
-      ))}
+    <div className="flex gap-3 mb-8 animate-slideInUp">
+      {views.map(({ id, label, icon: Icon, description }) => {
+        const isActive = currentView === id
+        return (
+          <button
+            key={id}
+            onClick={() => onViewChange(id)}
+            className={`flex items-center gap-2 px-4 py-3 rounded-xl font-semibold transition-all duration-300 group relative overflow-hidden ${
+              isActive
+                ? 'bg-gradient-to-r from-mm-emerald to-mm-emerald-light text-black shadow-glow-md scale-105'
+                : 'bg-mm-surface-light text-mm-text hover:bg-mm-surface-lighter hover:shadow-lg hover:scale-105'
+            }`}
+            title={description}
+          >
+            {/* Background Animation */}
+            {!isActive && (
+              <div className="absolute inset-0 bg-gradient-to-r from-mm-emerald/10 to-mm-emerald-light/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+            )}
+
+            {/* Icon and Text */}
+            <span className="relative flex items-center gap-2">
+              <Icon className="w-4 h-4" />
+              <span className="text-sm">{label}</span>
+            </span>
+          </button>
+        )
+      })}
     </div>
   )
 }
