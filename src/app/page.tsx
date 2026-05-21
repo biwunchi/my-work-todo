@@ -56,7 +56,7 @@ export default function Home() {
   return (
     <main className="w-screen h-screen transition-colors flex" style={{ backgroundColor: '#0f172a', color: '#f8fafc' }}>
       {/* Main Content */}
-      <div className="flex-1 flex flex-col p-8 overflow-hidden">
+      <div className="flex-1 flex flex-col p-10 overflow-hidden" style={{ paddingLeft: '40px', paddingRight: '20px' }}>
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <h1 className="text-4xl font-bold">My Work To Do</h1>
