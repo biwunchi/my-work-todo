@@ -20,7 +20,7 @@ export const useTasks = () => {
       const { data, error: fetchError } = await supabase
         .from('tasks')
         .select('*')
-        .order('date', { ascending: true })
+        .order('due_date', { ascending: true })
 
       if (fetchError) throw fetchError
       setTasks(data || [])
@@ -37,15 +37,15 @@ export const useTasks = () => {
       const dateStr = formatDateForSupabase(date)
       const { data, error: insertError } = await supabase
         .from('tasks')
-        .insert([
+        .insert(([
           {
             title,
             description,
-            date: dateStr,
+            due_date: dateStr,
             priority,
             completed: false,
           },
-        ])
+        ]))
         .select()
 
       if (insertError) throw insertError
@@ -107,7 +107,7 @@ export const useTasksForDate = (date: Date | null) => {
   useEffect(() => {
     if (date) {
       const dateStr = formatDateForSupabase(date)
-      const filtered = tasks.filter((t) => t.date === dateStr)
+      const filtered = tasks.filter((t) => t.due_date === dateStr)
       setTasksForDate(filtered)
     } else {
       setTasksForDate([])

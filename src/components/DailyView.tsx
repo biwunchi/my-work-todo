@@ -32,7 +32,7 @@ export function DailyView({
   }
 
   const dateStr = formatDateForSupabase(selectedDate)
-  const dayTasks = tasks.filter((t) => t.date === dateStr).sort((a, b) => {
+  const dayTasks = tasks.filter((t) => t.due_date === dateStr).sort((a, b) => {
     const priorityOrder = { high: 0, medium: 1, low: 2 }
     return (priorityOrder[a.priority as keyof typeof priorityOrder] || 3) - 
            (priorityOrder[b.priority as keyof typeof priorityOrder] || 3)

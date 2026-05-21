@@ -28,7 +28,7 @@ export function CalendarView({
 
   const getTasksForDate = (date: Date) => {
     const dateStr = formatDateForSupabase(date)
-    return tasks.filter((t) => t.date === dateStr)
+    return tasks.filter((t) => t.due_date === dateStr)
   }
 
   const isCurrentMonth = (date: Date) => isSameMonth(date, currentDate)

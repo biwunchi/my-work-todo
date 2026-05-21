@@ -26,7 +26,7 @@ export function WeeklyView({
 
   const getTasksForDate = (date: Date) => {
     const dateStr = formatDateForSupabase(date)
-    return tasks.filter((t) => t.date === dateStr)
+    return tasks.filter((t) => t.due_date === dateStr)
   }
 
   const getPriorityColor = (priority: string) => {
