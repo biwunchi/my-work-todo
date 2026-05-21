@@ -39,13 +39,13 @@ export function CalendarView({
         <div className="flex gap-2">
           <button
             onClick={onPrevMonth}
-            className="p-2 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-lg transition"
+            className="p-2 hover:bg-mm-surface rounded-lg transition"
           >
             <ChevronLeft className="w-5 h-5" />
           </button>
           <button
             onClick={onNextMonth}
-            className="p-2 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-lg transition"
+            className="p-2 hover:bg-mm-surface rounded-lg transition"
           >
             <ChevronRight className="w-5 h-5" />
           </button>
@@ -56,7 +56,7 @@ export function CalendarView({
         {weekDays.map((day) => (
           <div
             key={day}
-            className="text-center font-semibold text-sm py-2 text-gray-600 dark:text-gray-400"
+            className="text-center font-semibold text-sm py-2 text-mm-text-secondary"
           >
             {day}
           </div>
@@ -77,8 +77,8 @@ export function CalendarView({
               onMouseLeave={() => setHoveredDate(null)}
               className={`
                 min-h-24 p-2 border rounded-lg cursor-pointer transition
-                ${isOtherMonth ? 'bg-gray-50 dark:bg-gray-900 text-gray-400' : 'bg-white dark:bg-gray-800'}
-                ${hoveredDate === dateStr ? 'ring-2 ring-blue-500' : 'border-gray-200 dark:border-gray-700'}
+                ${isOtherMonth ? 'bg-mm-dark text-mm-text-secondary border-mm-border' : 'bg-mm-surface border-mm-border hover:bg-mm-surface-light'}
+                ${hoveredDate === dateStr ? 'ring-2 ring-mm-emerald' : ''}
               `}
             >
               <div className="text-sm font-semibold mb-2">{format(day, 'd')}</div>
@@ -93,21 +93,21 @@ export function CalendarView({
                             ? 'bg-red-500'
                             : task.priority === 'medium'
                             ? 'bg-yellow-500'
-                            : 'bg-green-500'
+                            : 'bg-mm-emerald'
                         }`}
                       >
                         {task.title}
                       </div>
                     ))}
                     {dayTasks.length > 3 && (
-                      <div className="text-xs text-gray-500 dark:text-gray-400 px-2">
+                      <div className="text-xs text-mm-text-secondary px-2">
                         +{dayTasks.length - 3} more
                       </div>
                     )}
                   </div>
                 )}
                 {hoveredDate !== dateStr && dayTasks.length > 0 && (
-                  <div className="text-xs font-semibold text-blue-600 dark:text-blue-400">
+                  <div className="text-xs font-semibold text-mm-emerald">
                     {dayTasks.length} task{dayTasks.length > 1 ? 's' : ''}
                   </div>
                 )}

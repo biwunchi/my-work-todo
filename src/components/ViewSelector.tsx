@@ -22,8 +22,8 @@ export function ViewSelector({ currentView, onViewChange }: ViewSelectorProps) {
           onClick={() => onViewChange(id)}
           className={`flex items-center gap-2 px-4 py-2 rounded-lg transition font-medium ${
             currentView === id
-              ? 'bg-blue-500 text-white'
-              : 'bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600'
+              ? 'bg-mm-emerald text-mm-dark hover:bg-mm-emerald-light'
+              : 'bg-mm-surface text-mm-text hover:bg-mm-surface-light'
           }`}
         >
           <Icon className="w-4 h-4" />

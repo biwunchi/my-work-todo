@@ -54,7 +54,7 @@ export default function Home() {
   if (!mounted) return null
 
   return (
-    <main className="w-screen h-screen bg-white dark:bg-gray-900 text-black dark:text-white transition-colors flex">
+    <main className="w-screen h-screen bg-mm-dark text-mm-text transition-colors flex">
       {/* Main Content */}
       <div className="flex-1 flex flex-col p-8 overflow-hidden">
         {/* Header */}
@@ -71,8 +71,8 @@ export default function Home() {
           {loading ? (
             <div className="flex items-center justify-center h-full">
               <div className="text-center">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
-                <p className="text-gray-500 dark:text-gray-400">Loading tasks...</p>
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-mm-emerald mx-auto mb-4"></div>
+                <p className="text-mm-text-secondary">Loading tasks...</p>
               </div>
             </div>
           ) : currentView === 'calendar' ? (

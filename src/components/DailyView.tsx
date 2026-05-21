@@ -24,7 +24,7 @@ export function DailyView({
 }: DailyViewProps) {
   if (!selectedDate) {
     return (
-      <div className="flex-1 flex items-center justify-center text-gray-400 dark:text-gray-500">
+      <div className="flex-1 flex items-center justify-center text-mm-text-secondary">
         Select a date to view tasks
       </div>
     )
@@ -38,18 +38,18 @@ export function DailyView({
       <div className="flex items-center justify-between mb-6">
         <div>
           <h2 className="text-2xl font-bold">{format(selectedDate, 'EEEE')}</h2>
-          <p className="text-gray-600 dark:text-gray-400">{format(selectedDate, 'MMMM d, yyyy')}</p>
+          <p className="text-mm-text-secondary">{format(selectedDate, 'MMMM d, yyyy')}</p>
         </div>
         <div className="flex gap-2">
           <button
             onClick={onPrevDay}
-            className="p-2 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-lg transition"
+            className="p-2 hover:bg-mm-surface rounded-lg transition"
           >
             <ChevronLeft className="w-5 h-5" />
           </button>
           <button
             onClick={onNextDay}
-            className="p-2 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-lg transition"
+            className="p-2 hover:bg-mm-surface rounded-lg transition"
           >
             <ChevronRight className="w-5 h-5" />
           </button>
@@ -60,7 +60,7 @@ export function DailyView({
         <div className="flex-1 flex items-center justify-center">
           <div className="text-center">
             <div className="text-4xl mb-2">📭</div>
-            <p className="text-gray-500 dark:text-gray-400">No tasks for this day</p>
+            <p className="text-mm-text-secondary">No tasks for this day</p>
           </div>
         </div>
       ) : (
@@ -68,12 +68,12 @@ export function DailyView({
           {dayTasks.map((task) => (
             <div
               key={task.id}
-              className={`p-4 border rounded-lg dark:border-gray-700 dark:bg-gray-800 ${
+              className={`p-4 border rounded-lg bg-mm-surface border-mm-border ${
                 task.priority === 'high'
-                  ? 'border-red-300 dark:border-red-600 bg-red-50 dark:bg-red-900/20'
+                  ? 'border-red-600 bg-red-900/10'
                   : task.priority === 'medium'
-                  ? 'border-yellow-300 dark:border-yellow-600 bg-yellow-50 dark:bg-yellow-900/20'
-                  : 'border-green-300 dark:border-green-600 bg-green-50 dark:bg-green-900/20'
+                  ? 'border-yellow-600 bg-yellow-900/10'
+                  : 'border-mm-emerald/50 bg-mm-emerald/5'
               }`}
             >
               <div className="flex items-start justify-between mb-2">
@@ -86,35 +86,35 @@ export function DailyView({
                           ? 'bg-red-500 text-white'
                           : task.priority === 'medium'
                           ? 'bg-yellow-500 text-white'
-                          : 'bg-green-500 text-white'
+                          : 'bg-mm-emerald text-mm-dark'
                       }`}
                     >
                       {task.priority.toUpperCase()}
                     </span>
                   </div>
                   {task.description && (
-                    <p className="text-sm mt-2 text-gray-700 dark:text-gray-300">
+                    <p className="text-sm mt-2 text-mm-text-secondary">
                       {task.description}
                     </p>
                   )}
                 </div>
               </div>
 
-              <div className="flex items-center justify-between pt-3 border-t border-gray-300 dark:border-gray-600">
-                <div className="text-xs text-gray-500 dark:text-gray-400">
+              <div className="flex items-center justify-between pt-3 border-t border-mm-border">
+                <div className="text-xs text-mm-text-secondary">
                   {format(new Date(task.created_at), 'MMM d, HH:mm')}
                 </div>
                 <div className="flex gap-2">
                   <button
                     onClick={() => onEditTask(task)}
-                    className="p-2 hover:bg-gray-300 dark:hover:bg-gray-600 rounded transition"
+                    className="p-2 hover:bg-mm-surface-light rounded transition"
                     title="Edit task"
                   >
                     <Edit className="w-4 h-4" />
                   </button>
                   <button
                     onClick={() => onDeleteTask(task.id)}
-                    className="p-2 hover:bg-red-200 dark:hover:bg-red-900 rounded transition text-red-600 dark:text-red-400"
+                    className="p-2 hover:bg-red-900/30 rounded transition text-red-400"
                     title="Delete task"
                   >
                     <Trash2 className="w-4 h-4" />

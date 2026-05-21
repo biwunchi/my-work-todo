@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Work To Do - Modern Minimal</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* KYDEC Color Palette */
+        :root {
+            --dark-blue: #0f3a5f;
+            --emerald: #00b894;
+            --light-emerald: #1dd1a1;
+            --dark-bg: #0a1929;
+            --card-bg: #132f4c;
+            --border: #1a4d7a;
+            --text-primary: #e3f2fd;
+            --text-secondary: #90caf9;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
+            background: linear-gradient(135deg, var(--dark-bg) 0%, var(--dark-blue) 100%);
+            color: var(--text-primary);
+            line-height: 1.5;
+            min-height: 100vh;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(90deg, var(--dark-blue) 0%, #1a5f8f 100%);
+            padding: 1.5rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 20px rgba(0, 184, 148, 0.1);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .header h1 {
+            font-size: 1.6rem;
+            font-weight: 300;
+            letter-spacing: 1px;
+            background: linear-gradient(90deg, #fff 0%, var(--light-emerald) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .theme-toggle {
+            background: linear-gradient(135deg, var(--emerald) 0%, var(--light-emerald) 100%);
+            border: none;
+            padding: 0.6rem 1.2rem;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            color: #000;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 184, 148, 0.3);
+        }
+
+        .theme-toggle:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 184, 148, 0.4);
+        }
+
+        /* Main Container */
+        .container {
+            display: grid;
+            grid-template-columns: 1fr 320px;
+            gap: 2rem;
+            padding: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* Tab Navigation */
+        .tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .tab {
+            background: transparent;
+            border: none;
+            font-family: inherit;
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            cursor: pointer;
+            padding: 0.75rem 1.5rem;
+            transition: all 0.3s ease;
+            position: relative;
+            font-weight: 500;
+        }
+
+        .tab:hover {
+            color: var(--text-primary);
+        }
+
+        .tab.active {
+            color: var(--light-emerald);
+            background: rgba(29, 209, 161, 0.1);
+            border-radius: 8px;
+        }
+
+        .tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 1.5rem;
+            right: 1.5rem;
+            height: 2px;
+            background: linear-gradient(90deg, var(--emerald) 0%, var(--light-emerald) 100%);
+            border-radius: 1px;
+        }
+
+        /* Calendar Grid */
+        .calendar {
+            background: linear-gradient(135deg, var(--card-bg) 0%, rgba(19, 47, 76, 0.8) 100%);
+            border: 1px solid var(--border);
+            padding: 2rem;
+            border-radius: 12px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+        }
+
+        .calendar-header {
+            margin-bottom: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .calendar-header h2 {
+            font-size: 1.4rem;
+            font-weight: 300;
+            background: linear-gradient(90deg, var(--text-primary) 0%, var(--light-emerald) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .calendar-nav {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .calendar-nav button {
+            background: rgba(0, 184, 148, 0.1);
+            border: 1px solid var(--emerald);
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            font-size: 0.85rem;
+            color: var(--light-emerald);
+            border-radius: 6px;
+            transition: all 0.3s ease;
+        }
+
+        .calendar-nav button:hover {
+            background: rgba(0, 184, 148, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .weekdays {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .weekday {
+            text-align: center;
+            font-weight: 600;
+            color: var(--text-secondary);
+            padding: 0.75rem;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .dates {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 0.75rem;
+        }
+
+        .date {
+            aspect-ratio: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            padding: 0.75rem;
+            background: linear-gradient(135deg, rgba(19, 47, 76, 0.5) 0%, rgba(15, 58, 95, 0.3) 100%);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            min-height: 100px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .date:hover {
+            background: linear-gradient(135deg, rgba(29, 209, 161, 0.2) 0%, rgba(19, 47, 76, 0.5) 100%);
+            border-color: var(--emerald);
+            transform: translateY(-4px);
+            box-shadow: 0 6px 20px rgba(0, 184, 148, 0.2);
+        }
+
+        .date.other-month {
+            opacity: 0.4;
+        }
+
+        .date.today {
+            background: linear-gradient(135deg, rgba(0, 184, 148, 0.2) 0%, rgba(29, 209, 161, 0.15) 100%);
+            border: 2px solid var(--light-emerald);
+            font-weight: 600;
+        }
+
+        .date-number {
+            font-size: 0.95rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        .date-tasks {
+            width: 100%;
+            font-size: 0.75rem;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 2px;
+        }
+
+        .task-dot {
+            display: inline-block;
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            margin: 1px;
+        }
+
+        .task-dot.high {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
+        }
+
+        .task-dot.medium {
+            background: linear-gradient(135deg, #ffa502 0%, #ff8c42 100%);
+        }
+
+        .task-dot.low {
+            background: linear-gradient(135deg, #4a90e2 0%, #357abd 100%);
+        }
+
+        /* Sidebar */
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .sidebar-section {
+            background: linear-gradient(135deg, var(--card-bg) 0%, rgba(19, 47, 76, 0.8) 100%);
+            border: 1px solid var(--border);
+            padding: 1.75rem;
+            border-radius: 12px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+        }
+
+        .sidebar-section h3 {
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 1.25rem;
+            color: var(--light-emerald);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.85rem;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-family: inherit;
+            font-size: 0.9rem;
+            color: var(--text-primary);
+            background: rgba(15, 58, 95, 0.5);
+            transition: all 0.3s ease;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--light-emerald);
+            background: rgba(15, 58, 95, 0.8);
+            box-shadow: 0 0 0 3px rgba(0, 184, 148, 0.1);
+        }
+
+        .add-button {
+            width: 100%;
+            padding: 0.85rem;
+            background: linear-gradient(135deg, var(--emerald) 0%, var(--light-emerald) 100%);
+            color: #000;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 0.95rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 184, 148, 0.3);
+        }
+
+        .add-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 184, 148, 0.4);
+        }
+
+        .upcoming-tasks {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .task-item {
+            padding: 0.9rem;
+            border-left: 3px solid;
+            background: rgba(15, 58, 95, 0.5);
+            border-radius: 6px;
+            font-size: 0.85rem;
+            transition: all 0.3s ease;
+        }
+
+        .task-item:hover {
+            background: rgba(15, 58, 95, 0.7);
+            transform: translateX(4px);
+        }
+
+        .task-item.high {
+            border-left-color: #ff6b6b;
+        }
+
+        .task-item.medium {
+            border-left-color: #ffa502;
+        }
+
+        .task-item.low {
+            border-left-color: #4a90e2;
+        }
+
+        .task-item-title {
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.25rem;
+        }
+
+        .task-item-date {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        /* Weekly/Daily Views */
+        .weekly-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 0.75rem;
+        }
+
+        .weekly-day {
+            padding: 1rem;
+            background: rgba(15, 58, 95, 0.5);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .weekly-day:hover {
+            background: rgba(15, 58, 95, 0.7);
+        }
+
+        .weekly-day.today {
+            background: linear-gradient(135deg, rgba(0, 184, 148, 0.2) 0%, rgba(29, 209, 161, 0.15) 100%);
+            border-color: var(--light-emerald);
+        }
+
+        .weekly-day-header {
+            font-weight: 600;
+            font-size: 0.85rem;
+            margin-bottom: 0.5rem;
+            color: var(--light-emerald);
+        }
+
+        .weekly-task {
+            padding: 0.4rem;
+            background: rgba(0, 0, 0, 0.2);
+            border-left: 2px solid;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .weekly-task.high {
+            border-left-color: #ff6b6b;
+        }
+
+        .weekly-task.medium {
+            border-left-color: #ffa502;
+        }
+
+        .weekly-task.low {
+            border-left-color: #4a90e2;
+        }
+
+        .daily-container {
+            padding: 0;
+        }
+
+        .daily-task {
+            padding: 1.2rem;
+            border-left: 3px solid;
+            background: rgba(15, 58, 95, 0.5);
+            margin-bottom: 1rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .daily-task:hover {
+            background: rgba(15, 58, 95, 0.7);
+            transform: translateX(4px);
+        }
+
+        .daily-task.high {
+            border-left-color: #ff6b6b;
+        }
+
+        .daily-task.medium {
+            border-left-color: #ffa502;
+        }
+
+        .daily-task.low {
+            border-left-color: #4a90e2;
+        }
+
+        .daily-task-title {
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.25rem;
+            font-size: 1rem;
+        }
+
+        .daily-task-priority {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        .daily-task-desc {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        @media (max-width: 1024px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+
+            .header {
+                padding: 1rem;
+            }
+
+            .container {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <h1>My Work To Do</h1>
+        <button class="theme-toggle" onclick="toggleTheme()">Dark Mode</button>
+    </div>
+
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Left Side: Calendar -->
+        <div>
+            <!-- Tab Navigation -->
+            <div class="tabs">
+                <button class="tab active" onclick="switchView('calendar')">Calendar</button>
+                <button class="tab" onclick="switchView('weekly')">Weekly</button>
+                <button class="tab" onclick="switchView('daily')">Daily</button>
+            </div>
+
+            <!-- Calendar View -->
+            <div id="calendar-view" class="calendar">
+                <div class="calendar-header">
+                    <h2>May 2026</h2>
+                    <div class="calendar-nav">
+                        <button onclick="previousMonth()">← Previous</button>
+                        <button onclick="nextMonth()">Next →</button>
+                    </div>
+                </div>
+
+                <div class="weekdays">
+                    <div class="weekday">Mon</div>
+                    <div class="weekday">Tue</div>
+                    <div class="weekday">Wed</div>
+                    <div class="weekday">Thu</div>
+                    <div class="weekday">Fri</div>
+                    <div class="weekday">Sat</div>
+                    <div class="weekday">Sun</div>
+                </div>
+
+                <div class="dates">
+                    <div class="date other-month"><div class="date-number">28</div></div>
+                    <div class="date other-month"><div class="date-number">29</div></div>
+                    <div class="date other-month"><div class="date-number">30</div></div>
+                    <div class="date"><div class="date-number">1</div></div>
+                    <div class="date"><div class="date-number">2</div></div>
+                    <div class="date"><div class="date-number">3</div></div>
+                    <div class="date"><div class="date-number">4</div></div>
+
+                    <div class="date"><div class="date-number">5</div></div>
+                    <div class="date"><div class="date-number">6</div></div>
+                    <div class="date"><div class="date-number">7</div></div>
+                    <div class="date"><div class="date-number">8</div></div>
+                    <div class="date"><div class="date-number">9</div></div>
+                    <div class="date"><div class="date-number">10</div></div>
+                    <div class="date"><div class="date-number">11</div></div>
+
+                    <div class="date"><div class="date-number">12</div></div>
+                    <div class="date"><div class="date-number">13</div></div>
+                    <div class="date"><div class="date-number">14</div></div>
+                    <div class="date"><div class="date-number">15</div></div>
+                    <div class="date"><div class="date-number">16</div></div>
+                    <div class="date"><div class="date-number">17</div></div>
+                    <div class="date"><div class="date-number">18</div></div>
+
+                    <div class="date"><div class="date-number">19</div></div>
+                    <div class="date"><div class="date-number">20</div></div>
+                    <div class="date today">
+                        <div class="date-number">21</div>
+                        <div class="date-tasks">
+                            <span class="task-dot high"></span>
+                        </div>
+                    </div>
+                    <div class="date">
+                        <div class="date-number">22</div>
+                        <div class="date-tasks">
+                            <span class="task-dot medium"></span>
+                        </div>
+                    </div>
+                    <div class="date"><div class="date-number">23</div></div>
+                    <div class="date">
+                        <div class="date-number">24</div>
+                        <div class="date-tasks">
+                            <span class="task-dot low"></span>
+                        </div>
+                    </div>
+                    <div class="date"><div class="date-number">25</div></div>
+
+                    <div class="date"><div class="date-number">26</div></div>
+                    <div class="date"><div class="date-number">27</div></div>
+                    <div class="date"><div class="date-number">28</div></div>
+                    <div class="date"><div class="date-number">29</div></div>
+                    <div class="date"><div class="date-number">30</div></div>
+                    <div class="date"><div class="date-number">31</div></div>
+                    <div class="date other-month"><div class="date-number">1</div></div>
+                </div>
+            </div>
+
+            <!-- Weekly View -->
+            <div id="weekly-view" style="display: none;" class="calendar">
+                <div class="calendar-header">
+                    <h2>Week of May 19-25, 2026</h2>
+                </div>
+                <div class="weekly-grid">
+                    <div class="weekly-day">
+                        <div class="weekly-day-header">Mon 19</div>
+                        <div class="weekly-day-tasks"></div>
+                    </div>
+                    <div class="weekly-day">
+                        <div class="weekly-day-header">Tue 20</div>
+                        <div class="weekly-day-tasks"></div>
+                    </div>
+                    <div class="weekly-day today">
+                        <div class="weekly-day-header">Wed 21</div>
+                        <div class="weekly-day-tasks">
+                            <div class="weekly-task high">workflow-service 개발</div>
+                        </div>
+                    </div>
+                    <div class="weekly-day">
+                        <div class="weekly-day-header">Thu 22</div>
+                        <div class="weekly-day-tasks">
+                            <div class="weekly-task medium">my-work-todo 배포</div>
+                        </div>
+                    </div>
+                    <div class="weekly-day">
+                        <div class="weekly-day-header">Fri 23</div>
+                        <div class="weekly-day-tasks"></div>
+                    </div>
+                    <div class="weekly-day">
+                        <div class="weekly-day-header">Sat 24</div>
+                        <div class="weekly-day-tasks">
+                            <div class="weekly-task low">GitHub 레포 정리</div>
+                        </div>
+                    </div>
+                    <div class="weekly-day">
+                        <div class="weekly-day-header">Sun 25</div>
+                        <div class="weekly-day-tasks"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Daily View -->
+            <div id="daily-view" style="display: none;" class="calendar daily-container">
+                <div class="calendar-header">
+                    <h2>May 21, 2026 (Wednesday)</h2>
+                </div>
+                <div class="daily-task high">
+                    <div class="daily-task-title">workflow-service 개발</div>
+                    <div class="daily-task-priority">High Priority</div>
+                    <div class="daily-task-desc">Service implementation and testing required</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Side: Sidebar -->
+        <div class="sidebar">
+            <!-- Add New Task -->
+            <div class="sidebar-section">
+                <h3>Add New Task</h3>
+                <form onsubmit="addTask(event)">
+                    <div class="form-group">
+                        <label for="task-title">Title</label>
+                        <input type="text" id="task-title" placeholder="Task name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="task-desc">Description</label>
+                        <textarea id="task-desc" placeholder="Details..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="task-date">Date</label>
+                        <input type="date" id="task-date" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="task-priority">Priority</label>
+                        <select id="task-priority">
+                            <option value="low">Low</option>
+                            <option value="medium" selected>Medium</option>
+                            <option value="high">High</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="add-button">Add Task</button>
+                </form>
+            </div>
+
+            <!-- Upcoming Tasks -->
+            <div class="sidebar-section">
+                <h3>Upcoming Tasks</h3>
+                <ul class="upcoming-tasks">
+                    <li class="task-item high">
+                        <div class="task-item-title">workflow-service 개발</div>
+                        <div class="task-item-date">May 21, 2026</div>
+                    </li>
+                    <li class="task-item medium">
+                        <div class="task-item-title">my-work-todo 배포</div>
+                        <div class="task-item-date">May 22, 2026</div>
+                    </li>
+                    <li class="task-item low">
+                        <div class="task-item-title">GitHub 레포 정리</div>
+                        <div class="task-item-date">May 24, 2026</div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function switchView(view) {
+            document.getElementById('calendar-view').style.display = 'none';
+            document.getElementById('weekly-view').style.display = 'none';
+            document.getElementById('daily-view').style.display = 'none';
+
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+
+            if (view === 'calendar') {
+                document.getElementById('calendar-view').style.display = 'block';
+                document.querySelectorAll('.tab')[0].classList.add('active');
+            } else if (view === 'weekly') {
+                document.getElementById('weekly-view').style.display = 'block';
+                document.querySelectorAll('.tab')[1].classList.add('active');
+            } else if (view === 'daily') {
+                document.getElementById('daily-view').style.display = 'block';
+                document.querySelectorAll('.tab')[2].classList.add('active');
+            }
+        }
+
+        function toggleTheme() {
+            const btn = document.querySelector('.theme-toggle');
+            const isDark = document.body.style.background === 'linear-gradient(135deg, rgb(10, 25, 41) 0%, rgb(15, 58, 95) 100%)';
+            
+            if (isDark) {
+                document.body.style.background = 'linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%)';
+                document.body.style.color = '#0f3a5f';
+                btn.textContent = 'Light Mode';
+            } else {
+                document.body.style.background = 'linear-gradient(135deg, var(--dark-bg) 0%, var(--dark-blue) 100%)';
+                document.body.style.color = 'var(--text-primary)';
+                btn.textContent = 'Dark Mode';
+            }
+        }
+
+        function previousMonth() {
+            alert('Previous month navigation');
+        }
+
+        function nextMonth() {
+            alert('Next month navigation');
+        }
+
+        function addTask(e) {
+            e.preventDefault();
+            const title = document.getElementById('task-title').value;
+            const date = document.getElementById('task-date').value;
+            const priority = document.getElementById('task-priority').value;
+            
+            alert(`Task Added: ${title} on ${date} (${priority} priority)`);
+            
+            document.querySelector('form').reset();
+        }
+
+        const today = new Date();
+        const yyyy = today.getFullYear();
+        const mm = String(today.getMonth() + 1).padStart(2, '0');
+        const dd = String(today.getDate()).padStart(2, '0');
+        document.getElementById('task-date').value = `${yyyy}-${mm}-${dd}`;
+    </script>
+</body>
+</html>

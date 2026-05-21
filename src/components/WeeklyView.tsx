@@ -37,13 +37,13 @@ export function WeeklyView({
         <div className="flex gap-2">
           <button
             onClick={onPrevWeek}
-            className="p-2 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-lg transition"
+            className="p-2 hover:bg-mm-surface rounded-lg transition"
           >
             <ChevronLeft className="w-5 h-5" />
           </button>
           <button
             onClick={onNextWeek}
-            className="p-2 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-lg transition"
+            className="p-2 hover:bg-mm-surface rounded-lg transition"
           >
             <ChevronRight className="w-5 h-5" />
           </button>
@@ -59,26 +59,26 @@ export function WeeklyView({
             <div
               key={dateStr}
               onClick={() => onDateSelect(day)}
-              className="flex flex-col border rounded-lg p-4 cursor-pointer hover:ring-2 hover:ring-blue-500 transition dark:border-gray-700 dark:bg-gray-800"
+              className="flex flex-col border rounded-lg p-4 cursor-pointer hover:ring-2 hover:ring-mm-emerald transition bg-mm-surface border-mm-border"
             >
               <div className="mb-4">
-                <div className="text-sm font-semibold text-gray-600 dark:text-gray-400">
+                <div className="text-sm font-semibold text-mm-text-secondary">
                   {dayLabels[index]}
                 </div>
                 <div className="text-2xl font-bold">{format(day, 'd')}</div>
               </div>
 
               <div className="flex-1">
-                <div className="text-3xl font-bold text-blue-600 dark:text-blue-400 mb-2">
+                <div className="text-3xl font-bold text-mm-emerald mb-2">
                   {dayTasks.length}
                 </div>
-                <div className="text-sm text-gray-600 dark:text-gray-400">
+                <div className="text-sm text-mm-text-secondary">
                   {dayTasks.length === 1 ? 'task' : 'tasks'}
                 </div>
               </div>
 
               {dayTasks.length > 0 && (
-                <div className="mt-4 pt-4 border-t dark:border-gray-700 space-y-2 max-h-24 overflow-y-auto">
+                <div className="mt-4 pt-4 border-t border-mm-border space-y-2 max-h-24 overflow-y-auto">
                   {dayTasks.slice(0, 3).map((task) => (
                     <div
                       key={task.id}
@@ -87,14 +87,14 @@ export function WeeklyView({
                           ? 'bg-red-500'
                           : task.priority === 'medium'
                           ? 'bg-yellow-500'
-                          : 'bg-green-500'
+                          : 'bg-mm-emerald'
                       }`}
                     >
                       {task.title}
                     </div>
                   ))}
                   {dayTasks.length > 3 && (
-                    <div className="text-xs text-gray-500 dark:text-gray-400 px-2">
+                    <div className="text-xs text-mm-text-secondary px-2">
                       +{dayTasks.length - 3} more
                     </div>
                   )}
